@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Official PRD Color Palette */
+  --dark-teal: #194350;
+  --dark-teal-hover: #12313b;
+  --coral-pink: #FF8882;
+  --coral-pink-hover: #f2726b;
+  --soft-peach: #FFC2B4;
+  --soft-peach-tint: rgba(255, 194, 180, 0.35);
+  --sage-green: #9DBEB9;
+  --sage-green-tint: rgba(157, 190, 185, 0.22);
+  --off-white: #F8F9FA;
+  --surface-white: #FFFFFF;
+
+  /* Semantic Ink & Borders */
+  --ink-primary: #194350;
+  --ink-secondary: #43646e;
+  --border-color: #9DBEB9;
+  --border-light: #d7e4e2;
+
+  /* Typography */
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Layout & Spacing */
+  --sidebar-width: 248px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background-color: var(--off-white);
+  color: var(--ink-primary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--coral-pink);
+  outline-offset: 2px;
+}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusSearch — Private Knowledge &amp; Search Studio</title>
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/layout.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Compact Left Sidebar -->
+    <aside class="sidebar" aria-label="Primary Navigation">
+      <div>
+        <div class="brand-block">
+          <div class="brand-mark">
+            <span class="brand-dot" aria-hidden="true"></span>
+            <span>NexusSearch</span>
+          </div>
+          <div class="brand-sub">Private Knowledge Retrieval</div>
+        </div>
+
+        <nav class="nav-list">
+          <button type="button" class="nav-item" data-view="search" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span>Search Studio</span>
+          </button>
+          <button type="button" class="nav-item" data-view="memory">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>My Digital Memory</span>
+          </button>
+          <button type="button" class="nav-item" data-view="crawler">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span>Web Crawler</span>
+          </button>
+          <button type="button" class="nav-item" data-view="library">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span>Indexed Content</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="status-pill">
+          <span class="status-indicator">
+            <span id="netDot" class="dot-online"></span>
+            <span id="netLabel">Index Online</span>
+          </span>
+          <span id="indexedCountStat">0 docs</span>
+        </div>
+        <button type="button" id="syncOfflineBtn" class="btn btn-sm btn-outline" style="width:100%">
+          Sync Offline Capsule
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-workspace">
+      <!-- 1. Search Studio -->
+      <section id="view-search" class="view-section">
+        <div class="search-studio-head">
+          <h1 class="section-title">Search Your Private Indexed Knowledge</h1>
+          <p class="section-subtitle">Query your local inverted index across crawled websites, imported PDFs, and archived bookmarks.</p>
+
+          <form id="searchForm" class="search-form-wrap" autocomplete="off">
+            <div class="search-bar-row">
+              <div class="search-input-box">
+                <svg class="search-icon-prefix" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input
+                  id="mainSearchInput"
+                  class="search-input"
+                  type="search"
+                  placeholder="Enter keywords, phrases, or document terms..."
+                  aria-label="Search indexed knowledge"
+                  required
+                >
+              </div>
+              <button type="submit" class="btn btn-lg btn-coral">Search</button>
+            </div>
+            <div id="suggestionsBox" class="suggestions-dropdown hidden" role="listbox"></div>
+          </form>
+        </div>
+
+        <div class="cluster-bar">
+          <div id="clusterTabs" class="cluster-tabs" role="group" aria-label="Topic Cluster Filters">
+            <button type="button" class="cluster-tab" data-category="All" aria-pressed="true">All</button>
+            <button type="button" class="cluster-tab" data-category="Tutorials & Guides" aria-pressed="false">Tutorials &amp; Guides</button>
+            <button type="button" class="cluster-tab" data-category="Code & Docs" aria-pressed="false">Code &amp; Docs</button>
+            <button type="button" class="cluster-tab" data-category="PDFs & Notes" aria-pressed="false">PDFs &amp; Notes</button>
+            <button type="button" class="cluster-tab" data-category="Articles" aria-pressed="false">Articles</button>
+          </div>
+          <div id="resultMetaBar" class="result-meta-bar">Ready to search local index</div>
+        </div>
+
+        <div id="searchResultsArea" class="results-list">
+          <div class="empty-state">
+            <h3>Start a query across your private corpus</h3>
+            <p>Type any keyword above or add sources via <strong>Web Crawler</strong> and <strong>My Digital Memory</strong>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. My Personal Digital Memory -->
+      <section id="view-memory" class="view-section hidden">
+        <div class="section-header">
+          <h1 class="section-title">My Personal Digital Memory</h1>
+          <p class="section-subtitle">Import local PDFs (up to 20 MB) and browser bookmark exports into your full-text search index.</p>
+        </div>
+
+        <div class="split-panels">
+          <div class="workspace-panel">
+            <h2 class="panel-heading">Import Local PDF Document</h2>
+            <p class="panel-desc">Extracts full page text and indexes it into SQLite FTS5. Maximum file size: 20 MB.</p>
+            <div id="pdfDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF file">
+              <strong>Drop a PDF file here or click to browse</strong>
+              <div style="font-size:12.5px;color:var(--ink-secondary);margin-top:4px">Supports text-based .pdf files up to 20 MB</div>
+            </div>
+            <input id="pdfFileInput" type="file" accept=".pdf,application/pdf" hidden>
+            <div id="pdfFeedback" class="feedback-banner hidden"></div>
+          </div>
+
+          <div class="workspace-panel">
+            <h2 class="panel-heading">Import Browser Bookmarks</h2>
+            <p class="panel-desc">Upload your exported <code>bookmarks.html</code> file to fetch, clean, and index saved web pages.</p>
+            <div id="bookmarkDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload Bookmarks HTML file">
+              <strong>Drop bookmarks.html here or click to select</strong>
+              <div style="font-size:12.5px;color:var(--ink-secondary);margin-top:4px">Automatically detects dead links and preserves cached snapshots</div>
+            </div>
+            <input id="bookmarkFileInput" type="file" accept=".html,.htm,text/html" hidden>
+            <div id="bookmarkFeedback" class="feedback-banner hidden"></div>
+          </div>
+        </div>
+
+        <div id="memoryDocsList"></div>
+      </section>
+
+      <!-- 3. Web Crawler -->
+      <section id="view-crawler" class="view-section hidden">
+        <div class="section-header">
+          <h1 class="section-title">Web Crawler</h1>
+          <p class="section-subtitle">Crawl user-provided websites with SHA-256 delta change detection and clean article extraction.</p>
+        </div>
+
+        <div class="workspace-panel" style="margin-bottom:24px">
+          <form id="crawlForm">
+            <div class="split-panels" style="margin-bottom:0">
+              <div class="form-field">
+                <label for="seedUrlInput">Seed URL</label>
+                <input id="seedUrlInput" class="text-input" type="url" placeholder="https://docs.python.org/3/tutorial/" required>
+              </div>
+              <div class="form-field">
+                <label for="maxPagesInput">Maximum Pages per Crawl (1–25)</label>
+                <input id="maxPagesInput" class="text-input" type="number" min="1" max="25" value="8" required>
+              </div>
+            </div>
+
+            <label class="checkbox-row">
+              <input id="sameDomainCheck" type="checkbox" checked>
+              <span>Restrict crawl strictly to the seed URL's domain</span>
+            </label>
+
+            <button id="startCrawlBtn" type="submit" class="btn btn-coral">Start Crawl &amp; Index</button>
+          </form>
+          <div id="crawlFeedback" class="feedback-banner hidden"></div>
+        </div>
+
+        <h2 class="panel-heading" style="margin-bottom:12px">Recent Crawl Sessions</h2>
+        <div id="crawlHistoryArea"></div>
+      </section>
+
+      <!-- 4. Indexed Content -->
+      <section id="view-library" class="view-section hidden">
+        <div class="section-header">
+          <h1 class="section-title">Indexed Content Library</h1>
+          <p class="section-subtitle">Browse all indexed web pages, PDFs, and bookmarks, verify dead links, and open cached snapshots.</p>
+        </div>
+
+        <div class="cluster-bar">
+          <div style="display:flex;flex-wrap:wrap;gap:10px;flex:1">
+            <input id="libraryFilterInput" class="text-input" style="max-width:320px" type="search" placeholder="Filter by title or URL...">
+            <select id="libraryTypeSelect" class="select-input" style="max-width:190px" aria-label="Filter by source type">
+              <option value="all">All Source Types</option>
+              <option value="web">Web Pages</option>
+              <option value="pdf">PDF Documents</option>
+              <option value="bookmark">Bookmarks</option>
+            </select>
+          </div>
+          <button id="verifyLinksBtn" type="button" class="btn btn-outline">Verify Dead Links</button>
+        </div>
+
+        <div id="libraryFeedback" class="feedback-banner hidden" style="margin-bottom:16px"></div>
+        <div id="libraryTableArea"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Slide-Over Clean Reader Drawer -->
+  <div id="readerBackdrop" class="reader-backdrop hidden" role="dialog" aria-modal="true" aria-label="Clean Article Reader">
+    <div class="reader-drawer">
+      <div class="reader-topbar">
+        <span style="font-weight:700;font-size:14px;color:var(--dark-teal)">Clean Reader · Distraction-Free Snapshot</span>
+        <button id="closeReaderBtn" type="button" class="btn btn-sm btn-outline">Close (Esc)</button>
+      </div>
+      <div class="reader-body">
+        <article id="readerArticle" class="reader-article"></article>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>
